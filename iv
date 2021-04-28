@@ -9,12 +9,14 @@ WINDOW_HEIGHT=$(( SCREEN_HEIGHT / 2 ))
 WINDOW_GEO_X=$(( WINDOW_WIDTH / 2))
 WINDOW_GEO_Y=$(( WINDOW_HEIGHT / 2))
 
-if [ -f "$1" ]; then
+if [ "x$1" = "x" ]; then
+    DIR="$PWD"
+elif [ -d "$1" ]; then
+    DIR="$1"
+elif [ -f "$1" ]; then
     DIR="$(dirname "$1")"
     OPT="--start-at"
     START="$1"
-elif [ -d "$1" ]; then
-    DIR="$1"
 else
     echo "$1" not found 1>&2
     exit 1
