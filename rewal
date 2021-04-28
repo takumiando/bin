@@ -1,9 +1,9 @@
 #!/bin/sh
 
-CONF=$HOME/.wallpaper
+CONF=~/.wallpaper
 
 if [ -f "$CONF" ]; then
-    read WP < "$CONF"
+    read -r WP < "$CONF"
     if [ -f "$WP" ]; then
         wal -i "$WP" --backend colorthief
     fi

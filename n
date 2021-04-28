@@ -3,13 +3,13 @@
 NOTES=~/notes
 
 note () {
-	printf '%s\n' "$(date "+%Y/%m/%d %T") $*" >> $NOTES
+    printf '%s\n' "$(date "+%Y/%m/%d %T") $*" >> $NOTES
 }
 
 if [ -p /dev/stdin ]; then
-	note $(cat -)
+    note "$(cat -)"
 elif [ $# -ne 0 ]; then
-	note $*
+    note "$@"
 else
-	cat $NOTES
+    cat $NOTES
 fi

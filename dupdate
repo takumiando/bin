@@ -2,4 +2,4 @@
 
 sudo apt update && sudo apt upgrade
 sudo apt autoremove
-sudo apt remove --purge $(dpkg -l | grep "^rc  " | cut -d " " -f 3)
+sudo apt remove --purge "$(dpkg -l | grep "^rc  " | cut -d " " -f 3)"

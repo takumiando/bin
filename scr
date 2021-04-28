@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export DST=${HOME}/Pictures/screenshots
+export DST=~/Pictures/screenshots
 
 case $1 in
 	's' ) OPT="-s" ;;
@@ -11,4 +11,4 @@ if [ ! -d ${DST} ]; then
 	mkdir -p ${DST}
 fi
 
-scrot ${OPT} -z -e 'mv $f $$DST'
+scrot $OPT -z -e 'mv $f $$DST'

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 SCREEN_SIZE=$(xrandr | grep primary | awk '{ print $4 }' | cut -d '+' -f 1)
-SCREEN_WIDTH=$(echo $SCREEN_SIZE | cut -d x -f 1)
-SCREEN_HEIGHT=$(echo $SCREEN_SIZE | cut -d x -f 2)
+SCREEN_WIDTH=$(echo "$SCREEN_SIZE" | cut -d x -f 1)
+SCREEN_HEIGHT=$(echo "$SCREEN_SIZE" | cut -d x -f 2)
 
 WINDOW_WIDTH=$(( SCREEN_WIDTH / 2 ))
 WINDOW_HEIGHT=$(( SCREEN_HEIGHT / 2 ))
