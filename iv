@@ -1,0 +1,23 @@
+#!/bin/sh
+
+SCREEN_SIZE=$(xdpyinfo | grep dimensions | awk '{ print $2 }')
+SCREEN_WIDTH=$(echo $SCREEN_SIZE | cut -d x -f 1)
+SCREEN_HEIGHT=$(echo $SCREEN_SIZE | cut -d x -f 2)
+
+WINDOW_WIDTH=$(( SCREEN_WIDTH / 2 ))
+WINDOW_HEIGHT=$(( SCREEN_HEIGHT / 2 ))
+WINDOW_GEO_X=$(( WINDOW_WIDTH / 2))
+WINDOW_GEO_Y=$(( WINDOW_HEIGHT / 2))
+
+if [ -f "$1" ]; then
+    DIR="$(dirname "$1")"
+    OPT="--start-at"
+    START="$1"
+elif [ -d "$1" ]; then
+    DIR="$1"
+else
+    echo "$1" not found 1>&2
+    exit 1
+fi
+
+feh -qZ. -S filename -g ${WINDOW_WIDTH}x${WINDOW_HEIGHT}+${WINDOW_GEO_X}+${WINDOW_GEO_Y} "$DIR" $OPT "$START"
