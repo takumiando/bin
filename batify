@@ -1,0 +1,29 @@
+#!/bin/sh
+
+BAT=/sys/class/power_supply/BAT0
+THRESHOLD=20
+THRESHOLD_CRITICAL=10
+INTERVAL_SEC=2
+
+if [ -d $BAT ]; then
+    NOTIFIED_LEVEL=0
+    while :
+    do
+        CAPACITY=$(cat $BAT/capacity)
+        STATUS=$(cat $BAT/status)
+
+        if [ $STATUS = "Discharging" ]; then
+            if [ $CAPACITY -lt $THRESHOLD_CRITICAL ] && [ $NOTIFIED_LEVEL -lt 2 ]; then
+                dunstify -u critical -h string:x-dunst-stack-tag:bat "Battery critically low: $CAPACITY%"
+                NOTIFIED_LEVEL=2
+            elif [ $CAPACITY -lt $THRESHOLD ] && [ $NOTIFIED_LEVEL -lt 1 ]; then
+                dunstify -u normal -h string:x-dunst-stack-tag:bat "Battery low: $CAPACITY%"
+                NOTIFIED_LEVEL=1
+            fi
+        else
+            NOTIFIED_LEVEL=0
+        fi
+
+        sleep $INTERVAL_SEC
+    done
+fi
