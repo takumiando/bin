@@ -4,11 +4,15 @@ export DST=~/Pictures/screenshots
 
 case $1 in
 	's' ) OPT="-s" ;;
-	'w' ) OPT="-u" ;;
 esac
 
 if [ ! -d ${DST} ]; then
 	mkdir -p ${DST}
 fi
 
-scrot $OPT -z -e 'mv $f $$DST'
+DATE=$(date "+%Y%m%d_%H%M%S_")
+NSEC=$(date "+%N")
+TMSEC=$(printf %02d $(expr $NSEC / 1000 / 1000 / 10 ))
+OUT=$DATE$TMSEC.png
+
+maim $OPT $DST/$OUT
