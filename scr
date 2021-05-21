@@ -15,4 +15,4 @@ NSEC=$(date "+%N")
 TMSEC=$(printf %02d $(expr $NSEC / 1000 / 1000 / 10 ))
 OUT=$DATE$TMSEC.png
 
-maim $OPT $DST/$OUT
+maim $OPT --hidecursor $DST/$OUT
