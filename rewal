@@ -5,7 +5,7 @@ CONF=~/.wallpaper
 if [ -f "$CONF" ]; then
     read -r WP < "$CONF"
     if [ -f "$WP" ]; then
-        wal -i "$WP" --backend colorthief
+        wal -i "$WP" --backend colorthief --saturate 0.2
     fi
 else
     touch "$CONF"
