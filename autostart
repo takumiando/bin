@@ -1,0 +1,35 @@
+# Disable touchpad
+LIST='TM3381-002 Touchpad'
+for NAME in $LIST
+do
+	NUM=$(xinput | grep $NAME | cut -d '=' -f 2 | awk '{print $1}')
+	if [ ! $NUM = '' ]; then
+		xinput set-prop $NUM "Device Enabled" 0 &
+	fi
+done
+
+# Caps is also Ctrl
+setxkbmap -option "ctrl:nocaps" &
+
+# Start fcitx-mozc
+fcitx-autostart &
+
+# Start file manager as a daemon
+thunar --daemon &
+
+# Start batify
+~/bin/batify &
+
+# Apply screen layouts
+if [ -f ~/.screen ]; then
+    sh ~/.screen
+fi
+
+# Set wallpaper and color scheme
+wal -qR &
+
+# Start picom
+picom -bc --config ~/.picom.conf
+
+# Start xscreensaver
+xscreensaver --no-splash &
