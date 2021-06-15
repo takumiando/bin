@@ -1,7 +1,7 @@
 #!/bin/sh
 
 clock () {
-        DATETIME=$(date "+%T")
+        DATETIME=$(date "+%Y/%m/%d %T")
         echo -n "$DATETIME"
 }
 
@@ -21,6 +21,10 @@ battery () {
     BAT=/sys/class/power_supply/BAT0
     THRESHOLD_WARNING=20
     THRESHOLD_CRITICAL=10
+
+    if [ ! -e $BAT ]; then
+        exit
+    fi
 
     CAPACITY=$(cat $BAT/capacity)
     STATUS=$(cat $BAT/status)
