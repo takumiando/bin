@@ -1,0 +1,50 @@
+#!/bin/sh
+
+clock () {
+        DATETIME=$(date "+%T")
+        echo -n "$DATETIME"
+}
+
+volume () {
+    LINE=$(amixer sget Master 2> /dev/null | grep "%" | head -n 1 | sed -e 's/\[\|\]//g')
+    VOL=$(echo $LINE |  awk '{print $5}')
+    STATUS=$(echo $LINE |  awk '{print $6}')
+
+    if [ "$STATUS" = "on" ]; then
+        echo -n "VOL $VOL"
+    else
+        echo -n "MUTE $VOL"
+    fi
+}
+
+battery () {
+    BAT=/sys/class/power_supply/BAT0
+    THRESHOLD_WARNING=20
+    THRESHOLD_CRITICAL=10
+
+    CAPACITY=$(cat $BAT/capacity)
+    STATUS=$(cat $BAT/status)
+
+    if [ "$STATUS" = "Discharging" ]; then
+        echo -n "BAT $CAPACITY%"
+    else
+        echo -n "PLUG $CAPACITY%"
+    fi
+}
+
+info () {
+    MYPID=$$
+    OLDPID=$(ps ax | grep sh | grep dwminfo | grep -v $MYPID | grep -v grep | awk '{print $1}')
+
+    if [ "$OLDPID" != "" ]; then
+        kill -9  $OLDPID 2> /dev/null
+    fi
+
+    while :
+    do
+        xsetroot -name "$(battery)  $(volume)  $(clock) "
+        sleep 0.5
+    done
+}
+
+info
