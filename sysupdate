@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case $(uname) in
+    Darwin )
+        ;;
+    Linux )
+        DIST=$(cat /etc/*-release | grep "^ID=" | cut -d '=' -f 2)
+        case $DIST in
+            debian )
+                sudo apt update && sudo apt upgrade
+                sudo apt autoremove
+                sudo apt remove --purge "$(dpkg -l | grep "^rc  " | cut -d " " -f 3)"
+                ;;
+            arch )
+                sudo pacman -Syu
+                ;;
+            * )
+                ;;
+        esac
+        ;;
+esac
