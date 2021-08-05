@@ -2,10 +2,24 @@
 
 CONF=~/.wallpaper
 
+macos_set_wallpaper () {
+    sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$1'"
+    killall Dock
+}
+
 if [ -f "$CONF" ]; then
     read -r WP < "$CONF"
     if [ -f "$WP" ]; then
-        wal -i "$WP" --backend colorthief --saturate 0.2
+        case $(uname) in
+            "Linux" )
+                wal -i "$WP" --backend colorthief --saturate 0.2
+                ;;
+            "Darwin" )
+                # pywal cannot set wallpaper correctly at latest macOS.
+                macos_set_wallpaper "$WP"
+                wal -i "$WP" --backend colorthief --saturate 0.2 -n
+                ;;
+        esac
     fi
 else
     touch "$CONF"
