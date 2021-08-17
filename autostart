@@ -33,4 +33,4 @@ wal -qR &
 picom -bc --config ~/.picom.conf
 
 # Start xscreensaver
-xscreensaver --no-splash &
+xscreensaver -no-splash &
