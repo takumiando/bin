@@ -11,8 +11,9 @@ done
 # Caps is also Ctrl
 setxkbmap -option "ctrl:nocaps" &
 
-# Start fcitx-mozc
-fcitx-autostart &
+# Start fcitx5-mozc
+killall fcitx5
+fcitx5 &
 
 # Start file manager as a daemon
 thunar --daemon &

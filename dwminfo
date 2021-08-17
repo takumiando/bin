@@ -36,6 +36,20 @@ battery () {
     fi
 }
 
+im () {
+    case $(fcitx5-remote) in
+        0 )
+            echo -n "  "
+            ;;
+        1 )
+            echo -n "EN"
+            ;;
+        2 )
+            echo -n "JP"
+            ;;
+    esac
+}
+
 info () {
     MYPID=$$
     OLDPID=$(ps ax | grep sh | grep dwminfo | grep -v $MYPID | grep -v grep | awk '{print $1}')
@@ -46,8 +60,8 @@ info () {
 
     while :
     do
-        xsetroot -name "$(battery)  $(volume)  $(clock) "
-        sleep 0.5
+        xsetroot -name "$(im)  $(battery)  $(volume)  $(clock) "
+        sleep 0.2
     done
 }
 
