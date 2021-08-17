@@ -11,9 +11,9 @@ volume () {
     STATUS=$(echo $LINE |  awk '{print $6}')
 
     if [ "$STATUS" = "on" ]; then
-        echo -n "VOL $VOL"
+        echo -n "V$VOL"
     else
-        echo -n "MUTE $VOL"
+        echo -n "V--%"
     fi
 }
 
@@ -30,16 +30,16 @@ battery () {
     STATUS=$(cat $BAT/status)
 
     if [ "$STATUS" = "Discharging" ]; then
-        echo -n "BAT $CAPACITY%"
+        echo -n "B$CAPACITY%"
     else
-        echo -n "PLUG $CAPACITY%"
+        echo -n "C$CAPACITY%"
     fi
 }
 
 im () {
     case $(fcitx5-remote) in
         0 )
-            echo -n "  "
+            echo -n "--"
             ;;
         1 )
             echo -n "EN"
@@ -48,6 +48,13 @@ im () {
             echo -n "JP"
             ;;
     esac
+}
+
+mem () {
+    MEM=$(free -h | grep "^Mem:")
+    TOTAL=$(echo $MEM | awk '{print $2}' | tr -d i)
+    USED=$(echo $MEM | awk '{print $3}' | tr -d i)
+    echo -n "$USED/$TOTAL"
 }
 
 info () {
@@ -60,7 +67,7 @@ info () {
 
     while :
     do
-        xsetroot -name "$(im)  $(battery)  $(volume)  $(clock) "
+        xsetroot -name "$(mem)  $(im)  $(battery)  $(volume)  $(clock) "
         sleep 0.2
     done
 }
