@@ -16,7 +16,7 @@ killall fcitx5
 fcitx5 &
 
 # Start file manager as a daemon
-thunar --daemon &
+pcmanfm -d &
 
 # Start batify
 ~/bin/batify &
