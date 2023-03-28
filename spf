@@ -1,0 +1,49 @@
+#!/bin/sh
+
+FIRMWARE="$1"
+TTYUSB=/dev/ttyUSB0
+DIRNAME=$(dirname "$0")
+
+if [ -n "$1" ] && [ -n "$2" ]; then
+    TTYUSB="$1"
+    FIRMWARE="$2"
+elif [ -n "$1" ]; then
+    FIRMWARE="$1"
+fi
+
+if [ -z "$FIRMWARE" ]; then
+    printf "usage: %s FIRMWARE\n" "$0"
+    exit 1
+fi
+
+if [ ! -e "$FIRMWARE" ]; then
+    printf "%s not found\n" "$FIRMWARE"
+    exit 1
+fi
+
+while :
+do
+    printf "Waiting for %s..." "$TTYUSB"
+    while :
+    do
+        if [ -e "$TTYUSB" ]; then
+            printf "connected!\n"
+            if "$DIRNAME"/spresense-flash -c "$TTYUSB" -b 921600 -s "$FIRMWARE"; then
+                printf "100\n"
+            fi | pbar -c yellow
+            break
+        fi
+        sleep 1
+    done
+
+    if [ -e "$TTYUSB" ]; then
+        printf "Please disconnect %s\n" "$TTYUSB"
+    fi
+    while :
+    do
+        if [ ! -e "$TTYUSB" ]; then
+            break
+        fi
+        sleep 1
+    done
+done
