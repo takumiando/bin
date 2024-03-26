@@ -1,0 +1,70 @@
+#!/bin/sh
+
+color_print () {
+    COLOR="$1"
+
+    case "$COLOR" in
+        black)
+            shift
+            printf "\033[30m%s\033[m" "$@"
+            ;;
+        red)
+            shift
+            printf "\033[31m%s\033[m" "$@"
+            ;;
+        green)
+            shift
+            printf "\033[32m%s\033[m" "$@"
+            ;;
+        yellow)
+            shift
+            printf "\033[33m%s\033[m" "$@"
+            ;;
+        blue)
+            shift
+            printf "\033[34m%s\033[m" "$@"
+            ;;
+        magenta)
+            shift
+            printf "\033[35m%s\033[m" "$@"
+            ;;
+        cyan)
+            shift
+            printf "\033[36m%s\033[m" "$@"
+            ;;
+        white)
+            shift
+            printf "\033[37m%s\033[m" "$@"
+            ;;
+        *)
+            printf "%s" "$@"
+            ;;
+    esac
+}
+
+if [ "$1" = -d ]; then
+    shift
+    if [ -n "$1" ]; then
+        IFS="$1"
+        shift
+    fi
+fi
+
+i=0
+for color in "$@"
+do
+    eval 'export COLOR_$i'="$color"
+    i="$(( i + 1 ))"
+done
+
+while read -r line
+do
+    i=0
+    for elm in $line
+    do
+        eval 'export COLOR=$COLOR_'"$i"
+        color_print "$COLOR" "$elm$IFS"
+        i="$(( i + 1 ))"
+    done
+    printf "\n"
+done
