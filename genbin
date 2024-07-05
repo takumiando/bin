@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -p /dev/stdin ]; then
+    VALUES="$(cat -)"
+else
+    VALUES="$*"
+fi
+
+for val in $VALUES
+do
+    if printf "%s" "$val" | grep -q '^[0-f][0-f]$'; then
+        printf "\x$val"
+    fi
+done
