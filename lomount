@@ -1,0 +1,30 @@
+#!/bin/sh
+
+SRC="$1"
+DIR="$2"
+
+if printf "%s" "$SRC" | grep -q '.p[1-99]'; then
+    IMG="$(printf "%s" "$SRC" | rev | cut -d p -f 2- | rev)"
+    PART="$(printf "%s" "$SRC" | rev | cut -d p -f 1)"
+fi
+
+if [ ! -f "$IMG" ]; then
+    printf "%s is not found\n" "$IMG "
+    exit 1
+fi
+
+if [ ! -d "$DIR" ]; then
+    printf "Cannot stat%s\n" " $DIR"
+    exit 1
+fi
+
+LOOPDEV="$(losetup -j "$IMG" | cut -d : -f 1 2> /dev/null)"
+if [ -z "$LOOPDEV" ]; then
+    if ! losetup -fP "$IMG" > /dev/null 2>&1; then
+        printf "Cannot bind loopback device\n" 1>&2
+        exit 1
+    fi
+fi
+LOOPDEV="$(losetup -j "$IMG" | cut -d : -f 1 2> /dev/null)"
+
+mount "$LOOPDEV"p"$PART" "$DIR"
