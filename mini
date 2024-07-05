@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if ! type minicom > /dev/null 2>&1; then
+    printf "minicom is not found\n" 1>&2
+    exit 1
+fi
+
+while :
+do
+    minicom -c on "$@" && break
+    sleep 1
+done
