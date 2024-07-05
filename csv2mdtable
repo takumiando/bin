@@ -1,0 +1,19 @@
+#!/bin/sh
+
+HEAD=1
+
+while read -r l
+do
+    LINE="$(printf "%s" "$l" | sed -e 's/\r//g' -e 's/^,//' -e 's/,$//' -e 's/^/|/' -e 's/$/|/g' -e 's/,/|/g')"
+    printf "%s\n" "$LINE"
+    if [ "$HEAD" -eq 1 ]; then
+        COLUMN="$(printf "%s" "$LINE" | fold -w 1 | grep -c '|')"
+        COLUMN="$(( COLUMN - 1 ))"
+        for i in $(seq "$COLUMN")
+        do
+            printf "|----"
+        done
+        printf "|\n"
+        HEAD=0
+    fi
+done
