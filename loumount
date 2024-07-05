@@ -1,0 +1,30 @@
+#!/bin/sh
+
+IMG="$1"
+
+if [ -z "$IMG" ]; then
+    printf "Image file is not specified\n"
+    exit 1
+fi
+
+LOOPDEV_PART="$(mount | grep "$IMG" | awk '{print $1}')"
+if [ -n "$LOOPDEV_PART" ]; then
+    umount "$LOOPDEV_PART"
+fi
+
+LOOPDEV="$(losetup -j "$IMG" | cut -d : -f 1 2> /dev/null)"
+if [ -z "$LOOPDEV" ]; then
+    if ! losetup -fP "$IMG" > /dev/null 2>&1; then
+        printf "Cannot bind loopback device\n" 1>&2
+        exit 1
+    fi
+fi
+LOOPDEV="$(losetup -j "$IMG" | cut -d : -f 1 2> /dev/null)"
+
+
+if printf "%s" "$LOOPDEV_PART" | grep -q '.p[1-99]'; then
+    LOOPDEV="$(printf "%s" "$LOOPDEV_PART" | rev | cut -d p -f 2- | rev)"
+fi
+
+umount "$DIR"
+losetup -d "$LOOPDEV"
